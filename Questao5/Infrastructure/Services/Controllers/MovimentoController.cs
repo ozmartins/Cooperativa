@@ -1,5 +1,6 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Questao5.Domain.Entities;
+using Questao5.Application.Commands.Requests;
 using Questao5.Domain.Enumerators;
 
 namespace Questao5.Infrastructure.Services.Controllers;
@@ -8,25 +9,42 @@ namespace Questao5.Infrastructure.Services.Controllers;
 [Route("[controller]")]
 public class MovimentoController : ControllerBase
 {
+    private readonly IMediator _mediator;
+
+    public MovimentoController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
     [HttpPost("Lancar")]
-    public ActionResult<Guid> Post(
+    public async Task<ActionResult<Guid>> Post(
         Guid identificacaoRequisicao, 
         Guid idContaCorrente, 
-        double valor,
-        TipoMovimento tipoMovimento)
+        TipoMovimento tipoMovimento,
+        double valor
+        )
     {
-        return new ActionResult<Guid>(new Movimento().IdMovimento);
+        var comando = new LancarMovimentoCommand
+        {
+            IdentificacaoRequisicao = identificacaoRequisicao,
+            IdContaCorrente = idContaCorrente,
+            DataMovimento = DateTime.Now,
+            TipoMovimento = tipoMovimento,
+            Valor = valor
+        };
+        
+        var movimento = await _mediator.Send(comando);
+        
+        return new ActionResult<Guid>(movimento.IdMovimento);
     }
     
     [HttpDelete("Estornar")]
-    public ActionResult<Guid> Delete(Guid idMovimento)
+    public async Task<ActionResult<Guid>> Delete(Guid idMovimento)
     {
-        return new ActionResult<Guid>(new Movimento().IdMovimento);
-    }
-    
-    [HttpGet("Obter")]
-    public ActionResult<Movimento> Get(Guid idMovimento)
-    {
-        return new ActionResult<Movimento>(new Movimento());
+        var comando = new EstornarMovimentoCommand { IdMovimento = idMovimento };
+        
+        var movimento = await _mediator.Send(comando);
+        
+        return new ActionResult<Guid>(movimento.IdMovimento);
     }
 }
