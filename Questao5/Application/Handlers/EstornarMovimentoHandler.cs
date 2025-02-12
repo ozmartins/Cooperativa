@@ -9,14 +9,14 @@ namespace Questao5.Application.Handlers;
 
 internal class EstornarMovimentoHandler : IRequestHandler<EstornarMovimentoCommand, EstornarMovimentoResponse>
 {
-    private readonly ICommandStore _commandStore;
+    private readonly MovimentoStore _movimentoStore;
 
-    public EstornarMovimentoHandler(ICommandStore commandStore)
+    public EstornarMovimentoHandler(MovimentoStore movimentoStore)
     {
-        _commandStore = commandStore;
+        _movimentoStore = movimentoStore;
     }
 
-    public Task<EstornarMovimentoResponse> Handle(EstornarMovimentoCommand request, CancellationToken cancellationToken)
+    public async Task<EstornarMovimentoResponse> Handle(EstornarMovimentoCommand request, CancellationToken cancellationToken)
     {
         var movimentoOriginal = new Movimento(Guid.Empty, DateTime.Now, TipoMovimento.Credito, 0);
 
@@ -30,10 +30,10 @@ internal class EstornarMovimentoHandler : IRequestHandler<EstornarMovimentoComma
             tipoMovimento,
             movimentoOriginal.Valor);
         
-        _commandStore.Save(movimento);
+        await _movimentoStore.Insert(movimento);
         
         var response = new EstornarMovimentoResponse{ IdMovimento = movimento.IdMovimento };
         
-        return Task.FromResult(response);
+        return response;
     }
 }

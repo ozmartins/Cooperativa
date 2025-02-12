@@ -8,14 +8,14 @@ namespace Questao5.Application.Handlers;
 
 internal class LancarMovimentoHandler : IRequestHandler<LancarMovimentoCommand, LancarMovimentoResponse>
 {
-    private readonly ICommandStore _commandStore;
+    private readonly MovimentoStore _movimentoStore;
 
-    public LancarMovimentoHandler(ICommandStore commandStore)
+    public LancarMovimentoHandler(MovimentoStore movimentoStore)
     {
-        _commandStore = commandStore;
+        _movimentoStore = movimentoStore;
     }
 
-    public Task<LancarMovimentoResponse> Handle(LancarMovimentoCommand request, CancellationToken cancellationToken)
+    public async Task<LancarMovimentoResponse> Handle(LancarMovimentoCommand request, CancellationToken cancellationToken)
     {
         var movimento = new Movimento(
             request.IdContaCorrente,
@@ -23,10 +23,10 @@ internal class LancarMovimentoHandler : IRequestHandler<LancarMovimentoCommand, 
             request.TipoMovimento,
             request.Valor);
 
-        _commandStore.Save(movimento);
+        await _movimentoStore.Insert(movimento);
         
         var response = new LancarMovimentoResponse{ IdMovimento = movimento.IdMovimento };
         
-        return Task.FromResult(response);
+        return response;
     }
 }
