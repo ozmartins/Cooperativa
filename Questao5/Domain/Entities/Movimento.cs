@@ -1,21 +1,21 @@
-using Questao5.Domain.Enumerators;
+using Newtonsoft.Json;
 
 namespace Questao5.Domain.Entities;
 
-public class Movimento
+public class Movimento(string idContaCorrente, DateTime dataMovimento, string tipoMovimento, double valor)
 {
-    public Guid IdMovimento { get; }
-    public Guid IdContaCorrente { get; }
-    public DateTime DataMovimento { get; }
-    public TipoMovimento TipoMovimento { get; }
-    public double Valor { get; }
+    [JsonProperty(nameof(IdMovimento))]
+    public string IdMovimento { get; } = Guid.NewGuid().ToString();
     
-    public Movimento(Guid idContaCorrente, DateTime dataMovimento, TipoMovimento tipoMovimento, double valor)
-    {
-        IdMovimento = Guid.NewGuid();
-        IdContaCorrente = idContaCorrente;
-        DataMovimento = dataMovimento;
-        TipoMovimento = tipoMovimento;
-        Valor = valor;
-    }
+    [JsonProperty(nameof(IdContaCorrente))]
+    public string IdContaCorrente { get; } = idContaCorrente;
+    
+    [JsonProperty(nameof(DataMovimento))]
+    public DateTime DataMovimento { get; } = dataMovimento;
+    
+    [JsonProperty(nameof(TipoMovimento))]
+    public string TipoMovimento { get; } = tipoMovimento;
+    
+    [JsonProperty(nameof(Valor))]
+    public double Valor { get; } = valor;
 }

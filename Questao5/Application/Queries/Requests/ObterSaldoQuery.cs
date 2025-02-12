@@ -3,7 +3,7 @@ using Questao5.Application.Queries.Responses;
 
 namespace Questao5.Application.Queries.Requests;
 
-internal class ObterSaldoQuery : IRequest<ObterSaldoResponse>
+public class ObterSaldoQuery : IRequest<ObterSaldoResponse>
 {
-    public Guid IdContaCorrente { get; set; }
+    public string IdContaCorrente { get; set; } = string.Empty;
 }

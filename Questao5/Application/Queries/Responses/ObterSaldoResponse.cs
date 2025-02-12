@@ -1,6 +1,9 @@
 namespace Questao5.Application.Queries.Responses;
 
-internal class ObterSaldoResponse
+public class ObterSaldoResponse
 {
-    public double Saldo { get; init; }
+    public string NumeroContaCorrente { get; set; } = string.Empty;
+    public string NomeTitularContaCorrente { get; set; } = string.Empty;
+    public DateTime DataHoraResposta { get; set; }
+    public double ValorSaldoAtual { get; set; }
 }

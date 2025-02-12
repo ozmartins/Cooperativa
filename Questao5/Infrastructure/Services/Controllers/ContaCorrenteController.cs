@@ -1,27 +1,29 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Questao5.Application.Queries.Requests;
+using Questao5.Application.Queries.Responses;
 
 namespace Questao5.Infrastructure.Services.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ContaCorrenteController : ControllerBase
+public class ContaCorrenteController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public ContaCorrenteController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet("Saldo")]
-    public async Task<ActionResult<double>> Get(Guid idContaCorrente)
+    public async Task<ActionResult<ObterSaldoResponse>> Get(string idContaCorrente)
     {
-        var query = new ObterSaldoQuery { IdContaCorrente = idContaCorrente};
+        try
+        {
+            var query = new ObterSaldoQuery { IdContaCorrente = idContaCorrente};
         
-        var saldo = await _mediator.Send(query);
+            var obterSaldoResponse = await mediator.Send(query);
         
-        return new ActionResult<double>(saldo.Saldo);
+            return new ActionResult<ObterSaldoResponse>(obterSaldoResponse);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+        
     }
 }

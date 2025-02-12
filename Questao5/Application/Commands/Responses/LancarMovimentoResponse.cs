@@ -1,6 +1,6 @@
 namespace Questao5.Application.Commands.Responses;
 
-internal class LancarMovimentoResponse
+public class LancarMovimentoResponse
 {
-    public Guid IdMovimento { get; init; }
+    public string IdMovimento { get; init; } = string.Empty;
 }
