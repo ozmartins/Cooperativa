@@ -10,9 +10,8 @@ Finalmente, o último desafio lhe pede para implementar uma pequena API rest que
 
 ## Índice
 
- - [Libraries](#libraries) 
- - [Running locally](#running-locally)
- - [Quick Reference](#quick-reference)
+ - [Bibliotecas](#libraries) 
+ - [Rodando localmente](#running-locally)
 
 ## Bibliotecas
 
