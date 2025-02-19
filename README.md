@@ -54,4 +54,4 @@ dotnet run
 ```
 A imagem abaixo mostra a saída da execução da aplicação.
 
-![image](https://github.com/user-attachments/assets/e0053342-0548-4c95-b414-71cd4ccfe9e7)
+![image](https://github.com/user-attachments/assets/4223ae42-ec81-43ee-a8d2-027dd63f9531)
