@@ -1,13 +1,14 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
+using Questao5.Application.Handlers;
 using Questao5.Domain.Entities;
 using Questao5.Infrastructure.Database.CommandStore;
 using Questao5.Infrastructure.Database.QueryStore.Response;
 
 namespace Questao5.Infrastructure.Database.QueryStore;
 
-public class ContaCorrenteStore(IConfiguration configuration)
+public class ContaCorrenteStore(IConfiguration configuration) : IContaCorrenteStore
 {
     private readonly string _connectionString = configuration.GetValue<string>("DatabaseName");
     

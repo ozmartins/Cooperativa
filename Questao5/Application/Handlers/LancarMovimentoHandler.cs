@@ -9,38 +9,40 @@ using Questao5.Infrastructure.Database.QueryStore;
 
 namespace Questao5.Application.Handlers;
 
-public class LancarMovimentoHandler(IConfiguration configuration, IMovimentoStore movimentoStore)
+public class LancarMovimentoHandler(
+    IConfiguration configuration,
+    IMovimentoStore movimentoStore,
+    IContaCorrenteStore contaCorrenteStore)
     : IRequestHandler<LancarMovimentoCommand, LancarMovimentoResponse>
 {
     private readonly IdempotenciaStore _idempotenciaStore = new(configuration);
-    private readonly ContaCorrenteStore _contaCorrenteStore = new(configuration);
 
     public async Task<LancarMovimentoResponse> Handle(LancarMovimentoCommand request,
         CancellationToken cancellationToken)
     {
         //TODO: usar Fluent|Validator
-        var contaCorrente = await _contaCorrenteStore.SelectAsync(request.IdContaCorrente);
-        
+        var contaCorrente = await contaCorrenteStore.SelectAsync(request.IdContaCorrente);
+
         if (contaCorrente is null)
             throw new InvalidAccountException();
-        
+
         if (!contaCorrente.Ativo)
             throw new InactiveAccountException();
-        
+
         if (request.Valor <= 0)
             throw new InvalidValueException();
-        
+
         if (request.TipoMovimento != TipoMovimento.Credito && request.TipoMovimento != TipoMovimento.Debito)
             throw new InvalidTypeException();
-        
+
         var idempotencia = await _idempotenciaStore.SelectAsync(request.IdentificacaoRequisicao);
 
         if (idempotencia is not null)
         {
             var result = JsonConvert.DeserializeObject<Movimento>(idempotencia.Resultado);
-            return new LancarMovimentoResponse{ IdMovimento = result?.IdMovimento ?? Guid.Empty.ToString() };
+            return new LancarMovimentoResponse { IdMovimento = result?.IdMovimento ?? Guid.Empty.ToString() };
         }
-        
+
         var movimento = new Movimento(
             request.IdContaCorrente,
             request.DataMovimento,
@@ -48,12 +50,12 @@ public class LancarMovimentoHandler(IConfiguration configuration, IMovimentoStor
             request.Valor);
 
         var response = new LancarMovimentoResponse { IdMovimento = movimento.IdMovimento };
-        
+
         var novaIdempotencia = new Idempotencia(
-            request.IdentificacaoRequisicao, 
+            request.IdentificacaoRequisicao,
             JsonConvert.SerializeObject(movimento),
             JsonConvert.SerializeObject(response));
-        
+
         //TODO: usar transação aqui.
         await movimentoStore.InsertAsync(movimento);
         await _idempotenciaStore.InsertAsync(novaIdempotencia);
