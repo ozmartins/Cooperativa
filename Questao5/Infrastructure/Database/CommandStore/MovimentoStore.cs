@@ -2,11 +2,12 @@ using Dapper;
 using Questao5.Domain.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
+using Questao5.Application.Handlers;
 using Questao5.Infrastructure.Sqlite;
 
 namespace Questao5.Infrastructure.Database.CommandStore;
 
-public class MovimentoStore(IConfiguration configuration)
+public class MovimentoStore(IConfiguration configuration) : IMovimentoStore
 {
     private readonly string _connectionString = configuration.GetValue<string>("DatabaseName");
     

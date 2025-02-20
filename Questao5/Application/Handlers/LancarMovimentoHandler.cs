@@ -9,10 +9,9 @@ using Questao5.Infrastructure.Database.QueryStore;
 
 namespace Questao5.Application.Handlers;
 
-public class LancarMovimentoHandler(IConfiguration configuration)
+public class LancarMovimentoHandler(IConfiguration configuration, IMovimentoStore movimentoStore)
     : IRequestHandler<LancarMovimentoCommand, LancarMovimentoResponse>
 {
-    private readonly MovimentoStore _movimentoStore = new(configuration);
     private readonly IdempotenciaStore _idempotenciaStore = new(configuration);
     private readonly ContaCorrenteStore _contaCorrenteStore = new(configuration);
 
@@ -56,7 +55,7 @@ public class LancarMovimentoHandler(IConfiguration configuration)
             JsonConvert.SerializeObject(response));
         
         //TODO: usar transação aqui.
-        await _movimentoStore.InsertAsync(movimento);
+        await movimentoStore.InsertAsync(movimento);
         await _idempotenciaStore.InsertAsync(novaIdempotencia);
 
         return response;
