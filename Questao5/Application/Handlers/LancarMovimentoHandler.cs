@@ -56,8 +56,8 @@ public class LancarMovimentoHandler(IConfiguration configuration)
             JsonConvert.SerializeObject(response));
         
         //TODO: usar transação aqui.
-        await _movimentoStore.Insert(movimento);
-        await _idempotenciaStore.Insert(novaIdempotencia);
+        await _movimentoStore.InsertAsync(movimento);
+        await _idempotenciaStore.InsertAsync(novaIdempotencia);
 
         return response;
     }

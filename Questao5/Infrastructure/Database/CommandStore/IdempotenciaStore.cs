@@ -11,7 +11,7 @@ public class IdempotenciaStore(IConfiguration configuration)
 {
     private readonly string _connectionString = configuration.GetValue<string>("DatabaseName");
     
-    public async Task Insert(Idempotencia idempotencia)
+    public async Task InsertAsync(Idempotencia idempotencia)
     {
         const string sql = """
                            INSERT INTO idempotencia (chave_idempotencia, requisicao, resultado) 

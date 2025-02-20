@@ -10,7 +10,7 @@ public class MovimentoStore(IConfiguration configuration)
 {
     private readonly string _connectionString = configuration.GetValue<string>("DatabaseName");
     
-    public async Task Insert(Movimento movimento)
+    public async Task InsertAsync(Movimento movimento)
     {
         const string sql = """
                            INSERT INTO movimento (idmovimento, idcontacorrente, datamovimento, tipomovimento, valor) 
