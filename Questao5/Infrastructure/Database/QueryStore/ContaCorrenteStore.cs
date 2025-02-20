@@ -8,10 +8,8 @@ using Questao5.Infrastructure.Database.QueryStore.Response;
 
 namespace Questao5.Infrastructure.Database.QueryStore;
 
-public class ContaCorrenteStore(IConfiguration configuration) : IContaCorrenteStore
+public class ContaCorrenteStore(SqliteConnection connection) : IContaCorrenteStore
 {
-    private readonly string _connectionString = configuration.GetValue<string>("DatabaseName");
-    
     public async Task<SaldoContaCorrenteResponse> SelectSaldoAsync(string idContaCorrente)
     {
         const string sql = """
@@ -27,8 +25,6 @@ public class ContaCorrenteStore(IConfiguration configuration) : IContaCorrenteSt
                            WHERE idcontacorrente = @idContaCorrente
                            """;
         
-        var connection = new SqliteConnection(_connectionString);
-        
         var saldo = await connection.QueryAsync<double>(sql, new { idContaCorrente });
         
         var contaCorrente = await SelectAsync(idContaCorrente);
@@ -43,8 +39,6 @@ public class ContaCorrenteStore(IConfiguration configuration) : IContaCorrenteSt
                            FROM contacorrente 
                            WHERE idcontacorrente = @idContaCorrente
                            """;
-        
-        var connection = new SqliteConnection(_connectionString);
         
         var contaCorrente = 
             await connection.QueryFirstOrDefaultAsync<ContaCorrente>(sql, new { idContaCorrente = idContaCorrente.ToString() });

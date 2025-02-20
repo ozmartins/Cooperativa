@@ -7,18 +7,14 @@ using Questao5.Infrastructure.Database.QueryStore.Response;
 
 namespace Questao5.Infrastructure.Database.CommandStore;
 
-public class IdempotenciaStore(IConfiguration configuration) : IIdempotenciaStore
+public class IdempotenciaStore(SqliteConnection connection) : IIdempotenciaStore
 {
-    private readonly string _connectionString = configuration.GetValue<string>("DatabaseName");
-    
     public async Task InsertAsync(Idempotencia idempotencia)
     {
         const string sql = """
                            INSERT INTO idempotencia (chave_idempotencia, requisicao, resultado) 
                            VALUES (@ChaveIdempotencia, @Requisicao, @Resultado)
                            """;
-        
-        await using var connection = new SqliteConnection(_connectionString);
         
         await connection.ExecuteAsync(sql, idempotencia);
     }
@@ -30,8 +26,6 @@ public class IdempotenciaStore(IConfiguration configuration) : IIdempotenciaStor
                            FROM idempotencia
                            WHERE chave_idempotencia  = @chaveIdempotencia
                            """;
-        
-        var connection = new SqliteConnection(_connectionString);
         
         var response = await connection.QueryFirstOrDefaultAsync<IdempotenciaResponse>(sql, new { chaveIdempotencia });
 
