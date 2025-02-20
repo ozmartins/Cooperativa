@@ -2,18 +2,14 @@ using MediatR;
 using Questao5.Application.Handlers.Exceptions;
 using Questao5.Application.Queries.Requests;
 using Questao5.Application.Queries.Responses;
-using Questao5.Infrastructure.Database.QueryStore;
-using SQLitePCL;
 
 namespace Questao5.Application.Handlers;
 
-public class ObterSaldoQueryHandler(IConfiguration configuration) : IRequestHandler<ObterSaldoQuery, ObterSaldoResponse>
+public class ObterSaldoQueryHandler(IContaCorrenteStore contaCorrenteStore) : IRequestHandler<ObterSaldoQuery, ObterSaldoResponse>
 {
-    private readonly ContaCorrenteStore _contaCorrenteStore = new(configuration);
-
     public async Task<ObterSaldoResponse> Handle(ObterSaldoQuery request, CancellationToken cancellationToken)
     {
-        var contaCorrente = await _contaCorrenteStore.SelectAsync(request.IdContaCorrente);
+        var contaCorrente = await contaCorrenteStore.SelectAsync(request.IdContaCorrente);
         
         if (contaCorrente is null)
             throw new InvalidAccountException();
@@ -21,7 +17,7 @@ public class ObterSaldoQueryHandler(IConfiguration configuration) : IRequestHand
         if (!contaCorrente.Ativo)
             throw new InactiveAccountException();
         
-        var saldoContaCorrente = await _contaCorrenteStore.SelectSaldoAsync(request.IdContaCorrente);
+        var saldoContaCorrente = await contaCorrenteStore.SelectSaldoAsync(request.IdContaCorrente);
 
         return new ObterSaldoResponse
         {

@@ -10,13 +10,11 @@ using Questao5.Infrastructure.Database.QueryStore;
 namespace Questao5.Application.Handlers;
 
 public class LancarMovimentoHandler(
-    IConfiguration configuration,
     IMovimentoStore movimentoStore,
-    IContaCorrenteStore contaCorrenteStore)
+    IContaCorrenteStore contaCorrenteStore,
+    IIdempotenciaStore idempotenciaStore)
     : IRequestHandler<LancarMovimentoCommand, LancarMovimentoResponse>
 {
-    private readonly IdempotenciaStore _idempotenciaStore = new(configuration);
-
     public async Task<LancarMovimentoResponse> Handle(LancarMovimentoCommand request,
         CancellationToken cancellationToken)
     {
@@ -35,7 +33,7 @@ public class LancarMovimentoHandler(
         if (request.TipoMovimento != TipoMovimento.Credito && request.TipoMovimento != TipoMovimento.Debito)
             throw new InvalidTypeException();
 
-        var idempotencia = await _idempotenciaStore.SelectAsync(request.IdentificacaoRequisicao);
+        var idempotencia = await idempotenciaStore.SelectAsync(request.IdentificacaoRequisicao);
 
         if (idempotencia is not null)
         {
@@ -58,7 +56,7 @@ public class LancarMovimentoHandler(
 
         //TODO: usar transação aqui.
         await movimentoStore.InsertAsync(movimento);
-        await _idempotenciaStore.InsertAsync(novaIdempotencia);
+        await idempotenciaStore.InsertAsync(novaIdempotencia);
 
         return response;
     }

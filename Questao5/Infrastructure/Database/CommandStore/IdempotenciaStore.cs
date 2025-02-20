@@ -7,7 +7,7 @@ using Questao5.Infrastructure.Database.QueryStore.Response;
 
 namespace Questao5.Infrastructure.Database.CommandStore;
 
-public class IdempotenciaStore(IConfiguration configuration)
+public class IdempotenciaStore(IConfiguration configuration) : IIdempotenciaStore
 {
     private readonly string _connectionString = configuration.GetValue<string>("DatabaseName");
     
