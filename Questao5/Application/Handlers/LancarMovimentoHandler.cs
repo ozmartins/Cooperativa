@@ -21,7 +21,6 @@ public class LancarMovimentoHandler(
     public async Task<LancarMovimentoResponse> Handle(LancarMovimentoCommand request,
         CancellationToken cancellationToken)
     {
-        //TODO: usar Fluent|Validator
         var contaCorrente = await contaCorrenteStore.SelectAsync(request.IdContaCorrente);
 
         if (contaCorrente is null)
