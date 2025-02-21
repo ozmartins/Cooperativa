@@ -3,7 +3,7 @@ using Microsoft.Data.Sqlite;
 
 namespace Questao5.Infrastructure.Sqlite
 {
-    public class DatabaseBootstrap(DatabaseConfig databaseConfig) : IDatabaseBootstrap
+    internal class DatabaseBootstrap(DatabaseConfig databaseConfig) : IDatabaseBootstrap
     {
         public void Setup()
         {

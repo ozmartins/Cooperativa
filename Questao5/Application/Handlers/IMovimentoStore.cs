@@ -2,7 +2,7 @@ using Questao5.Domain.Entities;
 
 namespace Questao5.Application.Handlers;
 
-public interface IMovimentoStore
+internal interface IMovimentoStore
 {
     Task InsertAsync(Movimento movimento);
 }

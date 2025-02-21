@@ -5,7 +5,7 @@ using Questao5.Application.Queries.Responses;
 
 namespace Questao5.Application.Handlers;
 
-public class ObterSaldoQueryHandler(IContaCorrenteStore contaCorrenteStore) : IRequestHandler<ObterSaldoQuery, ObterSaldoResponse>
+internal class ObterSaldoQueryHandler(IContaCorrenteStore contaCorrenteStore) : IRequestHandler<ObterSaldoQuery, ObterSaldoResponse>
 {
     public async Task<ObterSaldoResponse> Handle(ObterSaldoQuery request, CancellationToken cancellationToken)
     {

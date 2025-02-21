@@ -1,6 +1,6 @@
 namespace Questao5.Infrastructure.Database.CommandStore.Response;
 
-public class IdempotenciaResponse
+internal class IdempotenciaResponse
 {
     public string Resultado { get; init; } = string.Empty;
 }

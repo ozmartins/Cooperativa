@@ -1,6 +1,6 @@
 namespace Questao5.Domain.Entities;
 
-public class ContaCorrente
+internal class ContaCorrente
 {
     public string IdContaCorrente { get; } = Guid.NewGuid().ToString();
     public int Numero { get; private set; } = 0; 

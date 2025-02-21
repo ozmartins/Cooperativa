@@ -11,7 +11,7 @@ using Questao5.Infrastructure.Database.CommandStore;
 
 namespace Questao5.Application.Handlers;
 
-public class LancarMovimentoHandler(
+internal class LancarMovimentoHandler(
     IMovimentoStore movimentoStore,
     IContaCorrenteStore contaCorrenteStore,
     IIdempotenciaStore idempotenciaStore,

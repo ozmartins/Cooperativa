@@ -1,3 +1,4 @@
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 namespace Questao5.Application.Queries.Responses;
 
 public class ObterSaldoResponse

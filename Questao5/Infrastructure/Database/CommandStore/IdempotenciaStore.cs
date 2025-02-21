@@ -7,7 +7,7 @@ using Questao5.Infrastructure.Database.QueryStore.Response;
 
 namespace Questao5.Infrastructure.Database.CommandStore;
 
-public class IdempotenciaStore(SqliteConnection connection) : IIdempotenciaStore
+internal class IdempotenciaStore(SqliteConnection connection) : IIdempotenciaStore
 {
     public async Task InsertAsync(Idempotencia idempotencia)
     {

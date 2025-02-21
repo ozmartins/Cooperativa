@@ -1,6 +1,6 @@
 ﻿namespace Questao5.Infrastructure.Sqlite
 {
-    public class DatabaseConfig
+    internal class DatabaseConfig
     {
         public string Name { get; init; } = string.Empty;
     }

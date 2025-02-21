@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Questao5.Domain.Entities;
 
-public class Idempotencia(string chaveIdempotencia, string requisicao, string resultado)
+internal class Idempotencia(string chaveIdempotencia, string requisicao, string resultado)
 {
     [JsonProperty(nameof(ChaveIdempotencia))]
     public string ChaveIdempotencia { get; } = chaveIdempotencia;

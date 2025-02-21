@@ -7,7 +7,7 @@ using Questao5.Infrastructure.Sqlite;
 
 namespace Questao5.Infrastructure.Database.CommandStore;
 
-public class MovimentoStore(SqliteConnection connection) : IMovimentoStore
+internal class MovimentoStore(SqliteConnection connection) : IMovimentoStore
 {
     public async Task InsertAsync(Movimento movimento)
     {

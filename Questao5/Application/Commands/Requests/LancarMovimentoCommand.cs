@@ -3,7 +3,7 @@ using Questao5.Application.Commands.Responses;
 
 namespace Questao5.Application.Commands.Requests;
 
-public class LancarMovimentoCommand : IRequest<LancarMovimentoResponse>
+internal class LancarMovimentoCommand : IRequest<LancarMovimentoResponse>
 {
     public string IdentificacaoRequisicao { get; init; } = string.Empty;
     public string IdContaCorrente { get; init; } = string.Empty;

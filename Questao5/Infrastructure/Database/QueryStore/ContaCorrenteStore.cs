@@ -1,14 +1,12 @@
 using Dapper;
-using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using Questao5.Application.Handlers;
 using Questao5.Domain.Entities;
-using Questao5.Infrastructure.Database.CommandStore;
 using Questao5.Infrastructure.Database.QueryStore.Response;
 
 namespace Questao5.Infrastructure.Database.QueryStore;
 
-public class ContaCorrenteStore(SqliteConnection connection) : IContaCorrenteStore
+internal class ContaCorrenteStore(SqliteConnection connection) : IContaCorrenteStore
 {
     public async Task<SaldoContaCorrenteResponse> SelectSaldoAsync(string idContaCorrente)
     {
@@ -25,11 +23,11 @@ public class ContaCorrenteStore(SqliteConnection connection) : IContaCorrenteSto
                            WHERE idcontacorrente = @idContaCorrente
                            """;
         
-        var saldo = await connection.QueryAsync<double>(sql, new { idContaCorrente });
+        var saldo = await connection.QueryAsync<double?>(sql, new { idContaCorrente });
         
         var contaCorrente = await SelectAsync(idContaCorrente);
 
-        return new SaldoContaCorrenteResponse{ ContaCorrente = contaCorrente, Saldo = saldo.First() };
+        return new SaldoContaCorrenteResponse{ ContaCorrente = contaCorrente, Saldo = saldo.FirstOrDefault() ?? 0 };
     }
 
     public async Task<ContaCorrente?> SelectAsync(string idContaCorrente)
@@ -41,7 +39,7 @@ public class ContaCorrenteStore(SqliteConnection connection) : IContaCorrenteSto
                            """;
         
         var contaCorrente = 
-            await connection.QueryFirstOrDefaultAsync<ContaCorrente>(sql, new { idContaCorrente = idContaCorrente.ToString() });
+            await connection.QueryFirstOrDefaultAsync<ContaCorrente>(sql, new { idContaCorrente });
 
         return contaCorrente;
     }
