@@ -1,18 +1,21 @@
+using System.Data;
 using MediatR;
+using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Newtonsoft.Json;
 using Questao5.Application.Commands.Requests;
 using Questao5.Application.Commands.Responses;
 using Questao5.Application.Handlers.Exceptions;
 using Questao5.Domain.Entities;
 using Questao5.Infrastructure.Database.CommandStore;
-using Questao5.Infrastructure.Database.QueryStore;
 
 namespace Questao5.Application.Handlers;
 
 public class LancarMovimentoHandler(
     IMovimentoStore movimentoStore,
     IContaCorrenteStore contaCorrenteStore,
-    IIdempotenciaStore idempotenciaStore)
+    IIdempotenciaStore idempotenciaStore,
+    SqliteConnection connection)
     : IRequestHandler<LancarMovimentoCommand, LancarMovimentoResponse>
 {
     public async Task<LancarMovimentoResponse> Handle(LancarMovimentoCommand request,
@@ -54,9 +57,22 @@ public class LancarMovimentoHandler(
             JsonConvert.SerializeObject(movimento),
             JsonConvert.SerializeObject(response));
 
-        //TODO: usar transação aqui.
-        await movimentoStore.InsertAsync(movimento);
-        await idempotenciaStore.InsertAsync(novaIdempotencia);
+        if (connection.State != ConnectionState.Open)
+            connection.Open();
+        
+        await using var transaction = connection.BeginTransaction();
+        
+        try
+        {
+            await movimentoStore.InsertAsync(movimento);
+            await idempotenciaStore.InsertAsync(novaIdempotencia);
+            transaction.Commit();
+        }
+        catch (Exception)
+        {
+            transaction.Rollback();
+            throw;
+        }
 
         return response;
     }
